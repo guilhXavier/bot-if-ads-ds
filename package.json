@@ -1,0 +1,30 @@
+{
+  "name": "bot-if-ads-ds",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prettier:check": "prettier --check .",
+    "prettier:format": "prettier --write .",
+    "eslint:check": "eslint .",
+    "eslint:fix": "eslint --fix .",
+    "dev": "tsx watch src",
+    "build": "rimraf ./build && tsc",
+    "start": "pnpm run build && node build/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
+    "eslint": "^8.38.0",
+    "eslint-config-prettier": "^8.8.0",
+    "prettier": "^2.8.7",
+    "rimraf": "^5.0.0",
+    "typescript": "^5.0.4",
+    "vitest": "^0.30.1"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "rootDir": "src/",
+  "outDir": "build/",
+  "moduleResolution": "node",
+  "sourceMap": true,
+  "strict": true,
+  "noImplicitAny": true,
+  "resolveJsonModule": true
+}
