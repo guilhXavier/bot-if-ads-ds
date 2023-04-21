@@ -3,7 +3,11 @@
   "outDir": "build/",
   "moduleResolution": "node",
   "sourceMap": true,
+  "declarationMap": true,
   "strict": true,
   "noImplicitAny": true,
-  "resolveJsonModule": true
+  "resolveJsonModule": true,
+  "compilerOptions": {
+    "esModuleInterop": true
+  }
 }
