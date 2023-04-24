@@ -1,0 +1,25 @@
+#+title: Design document
+#+author: Guilherme Tamara Xavier (20231SS.ADS_J0011)
+
+* Purpose
+This document serves to be a reference for the design and architecture of the application.
+* Functionality
+The application will have purpose of validating if a Discord user is properly enrolled into his course and, if so, to add them onto the proper Discord text and voice channels for their assigned disciplines.
+* Architecture
+The application will consist of a back-end of two components: the *server* and the *database*.
+** Server
+Written in Node and Typescript, the server will have the function of defining and exposing the bot commands for end users, as well as handling messaging for user authentication and querying information from the database.
+
+*** Dependencies
+The server will depend on the [[https://discord.js.org/][Discord.JS]] library for interaction with Discord's API, [[https://www.npmjs.com/package/prisma][Prisma]] as an ORM for managing connections and queries to the database and
+[[https://www.npmjs.com/package/nodemailer][Nodemailer]] for sending emails.
+** Database
+The database will use the Database Managing System (DBMS) MongoDB, a document-oriented database, and it will consist of the following documents:
+*** Enrolled students
+This document will contain the identifying data for each enrolled student.
+*** Discipline enrollment
+This document will contain a row for each discipline a student is in.
+*** Tokens
+This document will contain a record of generated, available and expired tokens.
+*** Channels
+This document will contain the ID for each discord channel associated with a given discipline.
