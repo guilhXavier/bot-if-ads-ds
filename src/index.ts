@@ -11,6 +11,7 @@ import {
 import { commandsCollection, commandDataDefinitions } from './commands';
 
 config();
+
 const rest = new REST().setToken(process.env.BOT_TOKEN);
 
 const discordClient = new Client({
@@ -24,8 +25,9 @@ const discordClient = new Client({
 
 const prisma = new PrismaClient();
 
-const commandsHandler = async (interaction: ChatInputCommandInteraction) => {
-  console.log('Registered interaction.', interaction);
+export const commandsHandler = async (
+  interaction: ChatInputCommandInteraction
+) => {
   if (!interaction.isChatInputCommand()) return;
 
   const command = commandsCollection.get(interaction.commandName);
@@ -38,14 +40,11 @@ const commandsHandler = async (interaction: ChatInputCommandInteraction) => {
 };
 
 async function main() {
-  // Connect the client
   // await prisma.$connect();
   await discordClient.login(process.env.BOT_TOKEN);
   await rest.put(Routes.applicationCommands(process.env.BOT_CLIENT_ID), {
     body: commandDataDefinitions,
   });
-
-  console.log('Logged on.');
 
   discordClient.on(Events.InteractionCreate, commandsHandler);
 }

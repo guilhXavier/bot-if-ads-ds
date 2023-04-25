@@ -5,6 +5,8 @@
 This document serves to be a reference for the design and architecture of the application.
 * Functionality
 The application will have purpose of validating if a Discord user is properly enrolled into his course and, if so, to add them onto the proper Discord text and voice channels for their assigned disciplines.
+
+An extra functionality will be that of setting the users nickname to his full name; Discord, however, has a limit of 32 characters for nicknames and if the user's full name is greater than this limit, the full name truncates to "John P. B. Doe" (first and last name extended, middle names abbreviated)
 * Architecture
 The application will consist of a back-end of two components: the *server* and the *database*.
 ** Server
