@@ -1,18 +1,24 @@
 import { PrismaClient } from '@prisma/client';
+import { config } from 'dotenv';
+import { Client, ClientOptions, GatewayIntentBits } from 'discord.js';
+
+config();
+
+const discordClient = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMembers,
+  ],
+});
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('here');
   // Connect the client
   await prisma.$connect();
-  console.log('here1');
-  // ... you will write your Prisma Client queries here
-  await prisma.token.create({ data: { tokenCode: '100', isExpired: true } });
-
-  const tokens = await prisma.token.findMany();
-
-  console.log(tokens);
+  await discordClient.login(process.env.BOT_TOKEN);
 }
 
 main()
