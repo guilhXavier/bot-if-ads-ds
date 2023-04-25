@@ -11,9 +11,27 @@ datasource db {
 }
 
 model EnrolledStudent {
-  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
   name            String
   enrollmentId    String    @unique
   academicEmail   String    @unique
-  period          String
+}
+
+model DisciplineEnrollment {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  disciplineId    String
+  enrollmentId    String
+  name            String
+}
+
+model Token {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  tokenCode       String    @unique
+  isExpired       Boolean
+}
+
+model DisciplineChannel {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  disciplineId    String    @unique
+  channelId       String    @unique
 }
