@@ -34,6 +34,11 @@ export const commandsHandler = async (
 
   try {
     await command(interaction);
+    console.log(
+      `/${interaction.commandName} - ${new Date(
+        interaction.createdTimestamp
+      ).toLocaleString()}`
+    );
   } catch (err) {
     console.error(err);
   }
@@ -45,6 +50,8 @@ async function main() {
   await rest.put(Routes.applicationCommands(process.env.BOT_CLIENT_ID), {
     body: commandDataDefinitions,
   });
+
+  console.log('Server initialized.');
 
   discordClient.on(Events.InteractionCreate, commandsHandler);
 }
