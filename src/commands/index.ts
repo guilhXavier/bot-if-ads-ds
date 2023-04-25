@@ -1,3 +1,12 @@
-const x = 'This is an index file';
+import { BaseInteraction, Collection } from 'discord.js';
+import { helloCommand, helloCommandInteraction } from './hello';
 
-export { x };
+type CommandFunction = (interaction: BaseInteraction) => Promise<void>;
+
+const commandDataDefinitions = [helloCommand.toJSON()];
+
+const commandsCollection = new Collection<string, CommandFunction>();
+
+commandsCollection.set(helloCommand.name, helloCommandInteraction);
+
+export { commandsCollection, commandDataDefinitions };
