@@ -1,32 +1,31 @@
 import Nodemailer from 'nodemailer';
+import { config } from 'dotenv';
 
-const createTestTransport = async () => {
-  let testAccount = await Nodemailer.createTestAccount();
+config();
 
-  // create reusable transporter object using the default SMTP transport
-  let transporter = Nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false, // true for 465, false for other ports
+const createTransport = async () => {
+  return Nodemailer.createTransport({
+    service: 'gmail',
     auth: {
-      user: testAccount.user, // generated ethereal user
-      pass: testAccount.pass, // generated ethereal password
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_PASSWORD__TEST,
     },
   });
-
-  return transporter;
 };
 
 export class MailService {
-  public async sendMail(receiverEmail: string): Promise<void> {
-    const transporter = await createTestTransport();
+  public static async sendMail(
+    receiverEmail: string,
+    message: string
+  ): Promise<void> {
+    const transporter = await createTransport();
 
     transporter.sendMail(
       {
-        from: 'guilhermetamara5@icloud.com',
-        to: 'guilhermetamara5@icloud.com',
-        subject: 'Test Email',
-        text: 'Example email',
+        from: 'botifsulsapucaia@gmail.com',
+        to: receiverEmail,
+        subject: 'Validacão - Discord do Curso',
+        text: message,
       },
       (err, info) => {
         console.log(err, info);

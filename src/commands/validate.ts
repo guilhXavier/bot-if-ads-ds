@@ -8,6 +8,8 @@ import { EnrolledStudentRepository } from '../repository/EnrolledStudent.reposit
 import { prisma } from '../config';
 import { emailValidator } from '../validators/emailValidator';
 import { MailService } from '../services/mail.service';
+import { TokenService } from '../services/token.service';
+import { TokenRepository } from '../repository/Token.repository';
 
 const startValidationCommand = new SlashCommandBuilder()
   .setName('iniciar-validacao')
@@ -41,17 +43,23 @@ const startValidationCommandInteraction = async (
     new EnrolledStudentRepository(prisma)
   );
 
-  enrolledStudentService
-    .getEnrolledStudentByEmail(emailOption)
-    .then(async () => {
-      await interaction.reply(
-        `Verifique seu email ${emailOption} para completar a validacão.`
-      );
-      new MailService().sendMail(emailOption);
-    })
-    .catch(async () => {
-      failureHandler(interaction);
-    });
+  const tokenService = new TokenService(new TokenRepository(prisma));
+
+  try {
+    const student = await enrolledStudentService.getEnrolledStudentByEmail(
+      emailOption
+    );
+
+    await interaction.reply(
+      `Verifique seu email ${student.academicEmail} para finalizar a validacão.`
+    );
+
+    const token = await tokenService.createToken();
+
+    MailService.sendMail(student.academicEmail, 'Seu token: ' + token);
+  } catch (error) {
+    failureHandler(interaction);
+  }
 };
 
 export { startValidationCommand, startValidationCommandInteraction };
