@@ -11,10 +11,14 @@ export class TokenRepository {
     return await this.prisma.token.findUnique({ where: { tokenCode } });
   }
 
-  public async update(newToken: Token): Promise<void> {
+  public async update({
+    createdAt,
+    isExpired,
+    tokenCode,
+  }: Token): Promise<void> {
     await this.prisma.token.update({
-      where: { id: newToken.id },
-      data: newToken,
+      where: { tokenCode },
+      data: { createdAt, isExpired, tokenCode },
     });
   }
 }

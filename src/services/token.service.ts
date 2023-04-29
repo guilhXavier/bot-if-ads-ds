@@ -33,8 +33,12 @@ export class TokenService {
         proposedTokenCode
       );
 
-      if (isTokenExpiredFromTime(createdAt) && !isExpired) {
+      if (isTokenExpiredFromTime(createdAt)) {
         this.expireToken(tokenCode);
+        return false;
+      }
+
+      if (isExpired) {
         return false;
       }
 

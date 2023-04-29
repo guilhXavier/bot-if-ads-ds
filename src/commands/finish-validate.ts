@@ -3,6 +3,9 @@ import {
   SlashCommandBuilder,
   SlashCommandStringOption,
 } from 'discord.js';
+import { TokenService } from '../services/token.service';
+import { TokenRepository } from '../repository/Token.repository';
+import { prisma } from '../config';
 
 const finishValidationCommand = new SlashCommandBuilder()
   .setName('finalizar-validacao')
@@ -20,7 +23,15 @@ const finishValidationCommandInteraction = async (
 ): Promise<void> => {
   const tokenOption = interaction.options.getString('token');
 
-  await interaction.reply(`Token ${tokenOption} verificado com sucesso.`);
+  const tokenService = new TokenService(new TokenRepository(prisma));
+
+  const isValidToken = await tokenService.validateToken(tokenOption);
+
+  if (isValidToken) {
+    await interaction.reply(`Token ${tokenOption} verificado com sucesso.`);
+  } else {
+    await interaction.reply(`Falha na verificacão do token ${tokenOption}`);
+  }
 };
 
 export { finishValidationCommand, finishValidationCommandInteraction };
