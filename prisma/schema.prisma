@@ -21,7 +21,6 @@ model DisciplineEnrollment {
   id              String    @id @default(auto()) @map("_id") @db.ObjectId
   disciplineId    String
   enrollmentId    String
-  name            String
 }
 
 model Token {

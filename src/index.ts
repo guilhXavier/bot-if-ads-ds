@@ -8,6 +8,7 @@ import {
   REST,
   Routes,
 } from 'discord.js';
+import { prisma } from './config';
 import { commandsCollection, commandDataDefinitions } from './commands';
 
 config();
@@ -22,8 +23,6 @@ const discordClient = new Client({
     GatewayIntentBits.GuildMembers,
   ],
 });
-
-const prisma = new PrismaClient();
 
 export const commandsHandler = async (
   interaction: ChatInputCommandInteraction

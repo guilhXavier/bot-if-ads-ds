@@ -1,3 +1,5 @@
-const z = 'This is an index file';
+import { PrismaClient } from '@prisma/client';
 
-export { z };
+const prisma = new PrismaClient();
+
+export { prisma };

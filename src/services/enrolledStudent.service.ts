@@ -1,15 +1,12 @@
-import { PrismaClient } from '@prisma/client';
+import { EnrolledStudent } from '@prisma/client';
+import { EnrolledStudentRepository } from '../repository/EnrolledStudent.repository';
 
-const prisma = new PrismaClient();
+export class EnrolledStudentService {
+  constructor(private readonly repository: EnrolledStudentRepository) {}
 
-const getAllEnrolledStudents = async () => {
-  await prisma.$connect();
-
-  const allStudents = await prisma.enrolledStudent.findMany();
-
-  console.log(allStudents);
-
-  await prisma.$disconnect();
-};
-
-export { getAllEnrolledStudents };
+  public async getEnrolledStudentByEmail(
+    academicEmail: string
+  ): Promise<EnrolledStudent | undefined> {
+    return await this.repository.findByEmail(academicEmail);
+  }
+}
