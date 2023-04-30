@@ -81,7 +81,9 @@ const finishValidationCommandInteraction = async (
 ): Promise<void> => {
   const tokenOption = interaction.options.getString('token');
 
-  const isValidToken = await tokenService.isValidToken(tokenOption);
+  const token = await tokenService.getTokenByCode(tokenOption);
+
+  const isValidToken = await tokenService.isValidToken(token);
 
   if (isValidToken.isValid) {
     await interaction.reply(

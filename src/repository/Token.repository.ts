@@ -13,14 +13,21 @@ export class TokenRepository {
     return await this.prisma.token.findUnique({ where: { tokenCode } });
   }
 
+  public async findManyByEnrollementId(
+    enrollmentId: string
+  ): Promise<Array<Token>> {
+    return await this.prisma.token.findMany({ where: { enrollmentId } });
+  }
+
   public async update({
     createdAt,
     isExpired,
     tokenCode,
+    status,
   }: Token): Promise<void> {
     await this.prisma.token.update({
       where: { tokenCode },
-      data: { createdAt, isExpired, tokenCode },
+      data: { createdAt, isExpired, tokenCode, status },
     });
   }
 }

@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { Token } from '@prisma/client';
+import { Token, TokenStatus } from '@prisma/client';
 import { TokenRepository } from '../repository/Token.repository';
 import { isTokenExpiredFromTime } from '../validators/tokenValidator';
 
@@ -15,7 +15,13 @@ export class TokenService {
     return crypto.randomBytes(16).toString('hex');
   }
 
-  private async getTokenByCode(tokenCode: string): Promise<Token> {
+  private async getTokensByEnrollmentId(
+    enrollmentId: string
+  ): Promise<Array<Token>> {
+    return this.repository.findManyByEnrollementId(enrollmentId);
+  }
+
+  public async getTokenByCode(tokenCode: string): Promise<Token> {
     return this.repository.findByCode(tokenCode);
   }
 
@@ -26,20 +32,34 @@ export class TokenService {
     return newToken;
   }
 
-  public async expireToken(tokenCode: string): Promise<void> {
+  public async expireToken(
+    tokenCode: string,
+    status: TokenStatus
+  ): Promise<void> {
     const token = await this.getTokenByCode(tokenCode);
 
-    this.repository.update({ ...token, isExpired: true });
+    this.repository.update({ ...token, status, isExpired: true });
   }
 
-  public async isValidToken(
-    proposedTokenCode: string
-  ): Promise<TokenValidation> {
+  public async isValidToken(token: Token): Promise<TokenValidation> {
     try {
-      const token = await this.getTokenByCode(proposedTokenCode);
+      const tokensWithSameEnrollmentId = await this.getTokensByEnrollmentId(
+        token.enrollmentId
+      );
+
+      if (
+        tokensWithSameEnrollmentId.length &&
+        tokensWithSameEnrollmentId.find(
+          (tokenElement: Token): boolean =>
+            tokenElement.status === TokenStatus.SUCESS
+        )
+      ) {
+        this.expireToken(token.tokenCode, TokenStatus.EXPIRED);
+        return { token, isValid: false };
+      }
 
       if (isTokenExpiredFromTime(token.createdAt)) {
-        // this.expireToken(token.tokenCode);
+        this.expireToken(token.tokenCode, TokenStatus.EXPIRED);
         return { token, isValid: false };
       }
 
@@ -47,7 +67,7 @@ export class TokenService {
         return { token, isValid: false };
       }
 
-      // this.expireToken(token.tokenCode);
+      this.expireToken(token.tokenCode, TokenStatus.SUCESS);
 
       return { token, isValid: true };
     } catch (err) {

@@ -24,11 +24,18 @@ model DisciplineEnrollment {
 }
 
 model Token {
-  id              String    @id @default(auto()) @map("_id") @db.ObjectId
-  tokenCode       String    @unique
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  tokenCode       String        @unique
   enrollmentId    String
-  isExpired       Boolean   @default(false)
-  createdAt       DateTime  @default(now())
+  status          TokenStatus   @default(AVAILABLE)
+  isExpired       Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+}
+
+enum TokenStatus {
+  SUCESS
+  AVAILABLE
+  EXPIRED
 }
 
 model DisciplineChannel {
