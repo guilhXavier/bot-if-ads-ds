@@ -10,4 +10,12 @@ export class EnrolledStudentRepository {
       where: { academicEmail },
     });
   }
+
+  public async findByEnrollmentId(
+    enrollmentId: string
+  ): Promise<EnrolledStudent> {
+    return await this.prisma.enrolledStudent.findUnique({
+      where: { enrollmentId },
+    });
+  }
 }

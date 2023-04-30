@@ -5,8 +5,8 @@ export class DisciplineEnrollmentService {
   constructor(private readonly repository: DisciplineEnrollmentRepository) {}
 
   public async getStudentDisciplines(
-    academicId: string
+    enrollmentId: string
   ): Promise<Array<DisciplineEnrollment>> {
-    return await this.repository.findManyByEnrollmentId(academicId);
+    return await this.repository.findManyByEnrollmentId(enrollmentId);
   }
 }

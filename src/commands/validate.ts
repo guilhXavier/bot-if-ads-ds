@@ -2,6 +2,7 @@ import {
   ChatInputCommandInteraction,
   SlashCommandBuilder,
   SlashCommandStringOption,
+  PermissionFlagsBits,
 } from 'discord.js';
 import { EnrolledStudentService } from '../services/enrolledStudent.service';
 import { EnrolledStudentRepository } from '../repository/EnrolledStudent.repository';
@@ -20,7 +21,8 @@ const startValidationCommand = new SlashCommandBuilder()
         .setName('email')
         .setDescription('Seu email academico')
         .setRequired(true)
-  );
+  )
+  .setDefaultMemberPermissions(PermissionFlagsBits.ViewChannel);
 
 const failureHandler = async (
   interaction: ChatInputCommandInteraction
@@ -54,7 +56,7 @@ const startValidationCommandInteraction = async (
       `Verifique seu email ${student.academicEmail} para finalizar a validacão.`
     );
 
-    const token = await tokenService.createToken();
+    const token = await tokenService.createToken(student.enrollmentId);
 
     MailService.sendMail(student.academicEmail, 'Seu token: ' + token);
   } catch (error) {

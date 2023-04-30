@@ -10,4 +10,12 @@ export class DisciplineChannelRepository {
       where: { disciplineId },
     });
   }
+
+  public async findManyByDisciplineIds(
+    disciplineIds: Array<string>
+  ): Promise<Array<DisciplineChannel>> {
+    return await this.prisma.disciplineChannel.findMany({
+      where: { disciplineId: { in: disciplineIds } },
+    });
+  }
 }

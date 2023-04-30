@@ -3,6 +3,11 @@ import { Token } from '@prisma/client';
 import { TokenRepository } from '../repository/Token.repository';
 import { isTokenExpiredFromTime } from '../validators/tokenValidator';
 
+interface TokenValidation {
+  token?: Token;
+  isValid: boolean;
+}
+
 export class TokenService {
   constructor(private readonly repository: TokenRepository) {}
 
@@ -14,9 +19,9 @@ export class TokenService {
     return this.repository.findByCode(tokenCode);
   }
 
-  public async createToken(): Promise<string> {
+  public async createToken(enrollmentId: string): Promise<string> {
     const newToken = this.generateTokenCode();
-    await this.repository.save(newToken);
+    await this.repository.save(newToken, enrollmentId);
 
     return newToken;
   }
@@ -27,26 +32,26 @@ export class TokenService {
     this.repository.update({ ...token, isExpired: true });
   }
 
-  public async validateToken(proposedTokenCode: string): Promise<boolean> {
+  public async isValidToken(
+    proposedTokenCode: string
+  ): Promise<TokenValidation> {
     try {
-      const { tokenCode, isExpired, createdAt } = await this.getTokenByCode(
-        proposedTokenCode
-      );
+      const token = await this.getTokenByCode(proposedTokenCode);
 
-      if (isTokenExpiredFromTime(createdAt)) {
-        this.expireToken(tokenCode);
-        return false;
+      if (isTokenExpiredFromTime(token.createdAt)) {
+        // this.expireToken(token.tokenCode);
+        return { token, isValid: false };
       }
 
-      if (isExpired) {
-        return false;
+      if (token.isExpired) {
+        return { token, isValid: false };
       }
 
-      this.expireToken(tokenCode);
+      // this.expireToken(token.tokenCode);
 
-      return true;
+      return { token, isValid: true };
     } catch (err) {
-      return false;
+      return { token: null, isValid: false };
     }
   }
 }

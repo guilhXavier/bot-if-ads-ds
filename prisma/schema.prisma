@@ -26,6 +26,7 @@ model DisciplineEnrollment {
 model Token {
   id              String    @id @default(auto()) @map("_id") @db.ObjectId
   tokenCode       String    @unique
+  enrollmentId    String
   isExpired       Boolean   @default(false)
   createdAt       DateTime  @default(now())
 }
