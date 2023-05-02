@@ -6,8 +6,13 @@ import {
   Role,
   SlashCommandBuilder,
   SlashCommandStringOption,
+  GuildMember,
 } from 'discord.js';
-import { DisciplineChannel, DisciplineEnrollment } from '@prisma/client';
+import {
+  DisciplineChannel,
+  DisciplineEnrollment,
+  EnrolledStudent,
+} from '@prisma/client';
 import { TokenService } from '../services/token.service';
 import { TokenRepository } from '../repository/Token.repository';
 import { prisma } from '../config';
@@ -17,6 +22,7 @@ import { DisciplineEnrollmentService } from '../services/disciplineEnrollment.se
 import { DisciplineEnrollmentRepository } from '../repository/DisciplineEnrollment.repository';
 import { EnrolledStudentService } from '../services/enrolledStudent.service';
 import { EnrolledStudentRepository } from '../repository/EnrolledStudent.repository';
+import { studentNameFormatter } from '../formatters/studentName';
 
 const tokenService = new TokenService(new TokenRepository(prisma));
 
@@ -64,6 +70,19 @@ const addUserToProperChannels = async (
   });
 };
 
+const addUserNickName = async (
+  interaction: ChatInputCommandInteraction,
+  { name }: EnrolledStudent
+): Promise<void> => {
+  let nickname: string = '';
+
+  if (name.length >= 32) {
+    nickname = studentNameFormatter(name);
+  }
+
+  (interaction.member as GuildMember).setNickname(nickname);
+};
+
 const finishValidationCommand = new SlashCommandBuilder()
   .setName('finalizar-validacao')
   .setDescription('Esse comando finaliza a validacão do aluno no servidor.')
@@ -108,6 +127,7 @@ const finishValidationCommandInteraction = async (
     );
 
     addUserToProperChannels(interaction, channels);
+    addUserNickName(interaction, student);
   } else {
     await interaction.reply(`Falha na verificacão do token ${tokenOption}`);
   }

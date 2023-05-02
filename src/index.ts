@@ -43,7 +43,7 @@ export const commandsHandler = async (
 };
 
 async function main() {
-  // await prisma.$connect();
+  await prisma.$connect();
   await discordClient.login(process.env.BOT_TOKEN);
   await rest.put(Routes.applicationCommands(process.env.BOT_CLIENT_ID), {
     body: commandDataDefinitions,
