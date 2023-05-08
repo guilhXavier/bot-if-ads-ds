@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { emailValidator } from '../validators/emailValidator';
+import { emailValidator } from '../../validators/emailValidator';
 
 describe('Email Validator Test Suite', () => {
   it('should validate an email if properly formatted', async () => {

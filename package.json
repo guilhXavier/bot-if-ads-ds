@@ -12,7 +12,7 @@
     "coverage": "vitest run --coverage",
     "dev": "tsx watch src",
     "build": "rimraf ./build && tsc",
-    "start": "pnpm run build && node build/index.js",
+    "start": "pnpm run build && node --experimental-specifier-resolution=node build/index.js",
     "prepare": "husky install"
   },
   "keywords": [],

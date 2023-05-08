@@ -1,13 +1,12 @@
 {
-  "rootDir": "src/",
-  "outDir": "build/",
-  "moduleResolution": "node",
-  "sourceMap": true,
-  "declarationMap": true,
-  "strict": true,
-  "noImplicitAny": true,
-  "resolveJsonModule": true,
   "compilerOptions": {
-    "esModuleInterop": true
+    "rootDir": "./src",
+    "outDir": "./build",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "target": "es2022"
   }
 }

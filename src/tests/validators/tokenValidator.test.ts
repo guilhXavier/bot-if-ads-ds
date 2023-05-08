@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { isTokenExpiredFromTime } from '../validators/tokenValidator';
+import { isTokenExpiredFromTime } from '../../validators/tokenValidator';
 
 describe('Token Validator Test Suite', () => {
   it('should recognize an expired token', () => {
