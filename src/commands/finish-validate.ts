@@ -74,7 +74,7 @@ const addUserNickName = async (
   interaction: ChatInputCommandInteraction,
   { name }: EnrolledStudent
 ): Promise<void> => {
-  let nickname: string = name;
+  let nickname: string = '';
 
   if (name.length >= 32) {
     nickname = studentNameFormatter(name);
@@ -120,11 +120,13 @@ const finishValidationCommandInteraction = async (
         student.enrollmentId
       );
 
-    const channels = await channelsService.getChannelsByDisciplineIds(
-      studentDisciplines.map(
-        (el: DisciplineEnrollment): string => el.disciplineId
-      )
-    );
+    const channels =
+      await channelsService.getChannelsByDisciplineIdsAndDiaryIds(
+        studentDisciplines.map(
+          (el: DisciplineEnrollment): string => el.disciplineId
+        ),
+        studentDisciplines.map((el: DisciplineEnrollment): number => el.diaryId)
+      );
 
     addUserToProperChannels(interaction, channels);
     addUserNickName(interaction, student);

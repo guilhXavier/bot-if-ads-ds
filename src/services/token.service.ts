@@ -12,7 +12,7 @@ export class TokenService {
   constructor(private readonly repository: TokenRepository) {}
 
   private generateTokenCode(): string {
-    return crypto.randomBytes(16).toString('hex');
+    return crypto.randomBytes(8).toString('hex');
   }
 
   private async getTokensByEnrollmentId(

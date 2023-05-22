@@ -15,4 +15,14 @@ export class DisciplineChannelService {
   ): Promise<Array<DisciplineChannel>> {
     return await this.repository.findManyByDisciplineIds(disciplineIds);
   }
+
+  public async getChannelsByDisciplineIdsAndDiaryIds(
+    disciplineIds: Array<string>,
+    diaryIds: Array<number>
+  ): Promise<Array<DisciplineChannel>> {
+    return await this.repository.findManyByDisciplineIdsAndDiaryIds(
+      disciplineIds,
+      diaryIds
+    );
+  }
 }

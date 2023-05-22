@@ -19,6 +19,7 @@ model EnrolledStudent {
 
 model DisciplineEnrollment {
   id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  diaryId         Int
   disciplineId    String
   enrollmentId    String
 }
@@ -40,6 +41,7 @@ enum TokenStatus {
 
 model DisciplineChannel {
   id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  diaryId         Int
   disciplineId    String    @unique
   channelId       String    @unique
 }
