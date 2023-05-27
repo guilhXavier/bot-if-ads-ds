@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:5.0.2
+    container_name: mongodb
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$DB_USER
+      - MONGO_INITDB_ROOT_PASSWORD=$DB_PASSWORD
+    ports:
+      - $DB_PORT_LOCAL:$DB_PORT_DOCKER
+    volumes:
+      - db:/data/db
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - $DB_EXPRESS_PORT_LOCAL:$DB_EXPRESS_PORT_DOCKER
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=$DB_EXPRESS_USER
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=$DB_EXPRESS_PASSWORD
+      - ME_CONFIG_MONGODB_URL= mongodb://$DB_USER:$DB_PASSWORD@mongodb:$DB_PORT_DOCKER
+  app:
+    depends_on:
+      - mongodb
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: ./.env
+volumes:
+  db:

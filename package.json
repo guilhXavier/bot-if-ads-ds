@@ -11,9 +11,9 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "dev": "tsx watch src",
-    "build": "rimraf ./build && tsc",
-    "start": "pnpm run build && node --experimental-specifier-resolution=node build/index.js",
-    "prepare": "husky install"
+    "build": "rimraf ./dist && tsc",
+    "start": "NODE_ENV=production node --experimental-specifier-resolution=node dist/index.js",
+    "prepare": "node -e \"if (process.env.NODE_ENV !== 'production'){process.exit(1)} \" || husky install"
   },
   "keywords": [],
   "author": "",
