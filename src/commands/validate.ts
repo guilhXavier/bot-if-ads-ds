@@ -52,14 +52,15 @@ const startValidationCommandInteraction = async (
       emailOption
     );
 
-    await interaction.reply(
-      `Verifique seu email ${student.academicEmail} para finalizar a validacão.`
-    );
-
     const token = await tokenService.createToken(student.enrollmentId);
 
     MailService.sendMail(student.academicEmail, 'Seu token: ' + token);
+
+    await interaction.reply(
+      `Verifique seu email ${student.academicEmail} para finalizar a validacão.`
+    );
   } catch (error) {
+    console.log(error);
     failureHandler(interaction);
   }
 };
