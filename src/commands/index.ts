@@ -9,6 +9,10 @@ import {
   finishValidationCommandInteraction,
 } from './finish-validate';
 import { helpCommand, helpCommandInteraction } from './help';
+import {
+  resetChannelsCommand,
+  resetChannelsInteraction,
+} from './reset-channels';
 
 type CommandFunction = (interaction: BaseInteraction) => Promise<void>;
 
@@ -17,6 +21,7 @@ const commandDataDefinitions = [
   startValidationCommand.toJSON(),
   finishValidationCommand.toJSON(),
   helpCommand.toJSON(),
+  resetChannelsCommand.toJSON(),
 ];
 
 const commandsCollection = new Collection<string, CommandFunction>();
@@ -31,5 +36,6 @@ commandsCollection.set(
   finishValidationCommandInteraction
 );
 commandsCollection.set(helpCommand.name, helpCommandInteraction);
+commandsCollection.set(resetChannelsCommand.name, resetChannelsInteraction);
 
 export { commandsCollection, commandDataDefinitions };
