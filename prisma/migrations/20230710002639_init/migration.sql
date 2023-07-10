@@ -15,7 +15,6 @@ CREATE TABLE "EnrolledStudent" (
 CREATE TABLE "DisciplineEnrollment" (
     "id" SERIAL NOT NULL,
     "diaryId" INTEGER NOT NULL,
-    "disciplineId" TEXT NOT NULL,
     "enrollmentId" TEXT NOT NULL,
 
     CONSTRAINT "DisciplineEnrollment_pkey" PRIMARY KEY ("id")
@@ -37,7 +36,6 @@ CREATE TABLE "Token" (
 CREATE TABLE "DisciplineChannel" (
     "id" SERIAL NOT NULL,
     "diaryId" INTEGER NOT NULL,
-    "disciplineId" TEXT NOT NULL,
     "channelId" TEXT NOT NULL,
 
     CONSTRAINT "DisciplineChannel_pkey" PRIMARY KEY ("id")
@@ -53,7 +51,7 @@ CREATE UNIQUE INDEX "EnrolledStudent_academicEmail_key" ON "EnrolledStudent"("ac
 CREATE UNIQUE INDEX "Token_tokenCode_key" ON "Token"("tokenCode");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "DisciplineChannel_disciplineId_key" ON "DisciplineChannel"("disciplineId");
+CREATE UNIQUE INDEX "DisciplineChannel_diaryId_key" ON "DisciplineChannel"("diaryId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "DisciplineChannel_channelId_key" ON "DisciplineChannel"("channelId");
