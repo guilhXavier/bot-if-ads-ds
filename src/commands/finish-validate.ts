@@ -120,13 +120,9 @@ const finishValidationCommandInteraction = async (
         student.enrollmentId
       );
 
-    const channels =
-      await channelsService.getChannelsByDisciplineIdsAndDiaryIds(
-        studentDisciplines.map(
-          (el: DisciplineEnrollment): string => el.disciplineId
-        ),
-        studentDisciplines.map((el: DisciplineEnrollment): number => el.diaryId)
-      );
+    const channels = await channelsService.getChannelsByDiaryIds(
+      studentDisciplines.map((el: DisciplineEnrollment): number => el.diaryId)
+    );
 
     addUserToProperChannels(interaction, channels);
     addUserNickName(interaction, student);

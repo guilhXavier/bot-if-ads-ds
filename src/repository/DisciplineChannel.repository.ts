@@ -3,28 +3,17 @@ import { DisciplineChannel, PrismaClient } from '@prisma/client';
 export class DisciplineChannelRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  public async findByDisciplineId(
-    disciplineId: string
-  ): Promise<DisciplineChannel> {
+  public async findByDiaryId(diaryId: number): Promise<DisciplineChannel> {
     return await this.prisma.disciplineChannel.findUnique({
-      where: { disciplineId },
+      where: { diaryId },
     });
   }
 
-  public async findManyByDisciplineIds(
-    disciplineIds: Array<string>
-  ): Promise<Array<DisciplineChannel>> {
-    return await this.prisma.disciplineChannel.findMany({
-      where: { disciplineId: { in: disciplineIds } },
-    });
-  }
-
-  public async findManyByDisciplineIdsAndDiaryIds(
-    disciplineIds: Array<string>,
+  public async findManyByDiaryIds(
     diaryIds: Array<number>
   ): Promise<Array<DisciplineChannel>> {
     return await this.prisma.disciplineChannel.findMany({
-      where: { disciplineId: { in: disciplineIds }, diaryId: { in: diaryIds } },
+      where: { diaryId: { in: diaryIds } },
     });
   }
 }

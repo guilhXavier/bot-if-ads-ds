@@ -20,7 +20,6 @@ model EnrolledStudent {
 model DisciplineEnrollment {
   id              Int    @id @default(autoincrement())
   diaryId         Int
-  disciplineId    String
   enrollmentId    String
 }
 

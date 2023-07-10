@@ -4,25 +4,15 @@ import { DisciplineChannelRepository } from '../repository/DisciplineChannel.rep
 export class DisciplineChannelService {
   constructor(private readonly repository: DisciplineChannelRepository) {}
 
-  public async getChannelByDisciplineId(
-    disciplineId: string
+  public async getChannelByDiaryId(
+    diaryId: number
   ): Promise<DisciplineChannel> {
-    return await this.repository.findByDisciplineId(disciplineId);
+    return await this.repository.findByDiaryId(diaryId);
   }
 
-  public async getChannelsByDisciplineIds(
-    disciplineIds: Array<string>
-  ): Promise<Array<DisciplineChannel>> {
-    return await this.repository.findManyByDisciplineIds(disciplineIds);
-  }
-
-  public async getChannelsByDisciplineIdsAndDiaryIds(
-    disciplineIds: Array<string>,
+  public async getChannelsByDiaryIds(
     diaryIds: Array<number>
   ): Promise<Array<DisciplineChannel>> {
-    return await this.repository.findManyByDisciplineIdsAndDiaryIds(
-      disciplineIds,
-      diaryIds
-    );
+    return await this.repository.findManyByDiaryIds(diaryIds);
   }
 }
