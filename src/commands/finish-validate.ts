@@ -74,7 +74,7 @@ const addUserNickName = async (
   interaction: ChatInputCommandInteraction,
   { name }: EnrolledStudent
 ): Promise<void> => {
-  let nickname: string = '';
+  let nickname: string = name;
 
   if (name.length >= 32) {
     nickname = studentNameFormatter(name);
