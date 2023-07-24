@@ -41,6 +41,10 @@ export class TokenService {
     this.repository.update({ ...token, status, isExpired: true });
   }
 
+  public async deleteAll(): Promise<void> {
+    this.repository.deleteAll();
+  }
+
   public async isValidToken(token: Token): Promise<TokenValidation> {
     try {
       const tokensWithSameEnrollmentId = await this.getTokensByEnrollmentId(

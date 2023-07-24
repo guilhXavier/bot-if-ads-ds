@@ -19,6 +19,10 @@ export class TokenRepository {
     return await this.prisma.token.findMany({ where: { enrollmentId } });
   }
 
+  public async deleteAll(): Promise<void> {
+    await this.prisma.token.deleteMany({});
+  }
+
   public async update({
     createdAt,
     isExpired,

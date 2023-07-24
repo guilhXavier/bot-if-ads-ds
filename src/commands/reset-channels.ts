@@ -2,11 +2,14 @@ import {
   ChatInputCommandInteraction,
   PermissionFlagsBits,
   SlashCommandBuilder,
+  TextChannel,
 } from 'discord.js';
 import { DisciplineChannelService } from '../services/disciplineChannel.service';
 import { DisciplineChannelRepository } from '../repository/DisciplineChannel.repository';
 import { prisma } from '../config';
 import { DisciplineChannel } from '@prisma/client';
+import { TokenService } from '../services/token.service';
+import { TokenRepository } from '../repository/Token.repository';
 
 const resetChannelsCommand = new SlashCommandBuilder()
   .setName('reset-channels')
@@ -19,6 +22,7 @@ const resetChannelsInteraction = async (
   const disciplineService = new DisciplineChannelService(
     new DisciplineChannelRepository(prisma)
   );
+  const tokenService = new TokenService(new TokenRepository(prisma));
 
   const channels = await disciplineService.getAllChannels();
 
@@ -31,10 +35,13 @@ const resetChannelsInteraction = async (
       (ch) => ch.id === channel
     );
 
-    setTimeout(() => {
-      cachedChannel.edit({ permissionOverwrites: [] });
-    }, 500);
+    (cachedChannel as TextChannel).permissionOverwrites.create(
+      cachedChannel.guild.roles.everyone,
+      { ViewChannel: false }
+    );
   });
+
+  tokenService.deleteAll();
 };
 
 export { resetChannelsCommand, resetChannelsInteraction };
