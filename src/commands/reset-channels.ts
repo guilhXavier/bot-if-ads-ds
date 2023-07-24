@@ -1,6 +1,7 @@
 import {
   ChatInputCommandInteraction,
   PermissionFlagsBits,
+  PermissionsBitField,
   SlashCommandBuilder,
   TextChannel,
 } from 'discord.js';
@@ -35,10 +36,15 @@ const resetChannelsInteraction = async (
       (ch) => ch.id === channel
     );
 
-    (cachedChannel as TextChannel).permissionOverwrites.create(
-      cachedChannel.guild.roles.everyone,
-      { ViewChannel: false }
-    );
+    (cachedChannel as TextChannel).permissionOverwrites.set([
+      {
+        id: interaction.guild.id,
+        deny: [
+          PermissionsBitField.Flags.ViewChannel,
+          PermissionsBitField.Flags.SendMessages,
+        ],
+      },
+    ]);
   });
 
   tokenService.deleteAll();
