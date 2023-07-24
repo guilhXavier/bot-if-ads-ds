@@ -7,6 +7,7 @@ import {
   SlashCommandBuilder,
   SlashCommandStringOption,
   GuildMember,
+  TextChannel,
 } from 'discord.js';
 import {
   DisciplineChannel,
@@ -55,18 +56,22 @@ const addUserToProperChannels = async (
   const channelManager = interaction.guild.channels;
   const member = interaction.member.user.id;
 
+  console.log(channels);
+
   channels.forEach(async (channel: DisciplineChannel): Promise<void> => {
-    await channelManager.edit(channel.channelId, {
-      permissionOverwrites: [
-        {
-          id: member,
-          allow: [
-            PermissionsBitField.Flags.ViewChannel,
-            PermissionsBitField.Flags.SendMessages,
-          ],
-        },
-      ],
-    });
+    const cachedChannel = channelManager.cache.find(
+      (ch) => ch.id === channel.channelId
+    );
+
+    (cachedChannel as TextChannel).permissionOverwrites.set([
+      {
+        id: member,
+        allow: [
+          PermissionsBitField.Flags.ViewChannel,
+          PermissionsBitField.Flags.SendMessages,
+        ],
+      },
+    ]);
   });
 };
 
@@ -103,31 +108,38 @@ const finishValidationCommandInteraction = async (
   const token = await tokenService.getTokenByCode(tokenOption);
 
   const isValidToken = await tokenService.isValidToken(token);
-
-  if (isValidToken.isValid) {
-    await interaction.reply(
-      `Token ${tokenOption} verificado com sucesso. Voce será adicionado aos seus canais respectivos.`
-    );
-
-    await addUserToStudentRole(interaction);
-
-    const student = await studentService.getEnrolledStudentByEnrollmentId(
-      isValidToken.token?.enrollmentId
-    );
-
-    const studentDisciplines =
-      await enrolledDisciplinesService.getStudentDisciplines(
-        student.enrollmentId
+  try {
+    if (isValidToken.isValid) {
+      await interaction.reply(
+        `Token ${tokenOption} verificado com sucesso. Voce será adicionado aos seus canais respectivos.`
       );
 
-    const channels = await channelsService.getChannelsByDiaryIds(
-      studentDisciplines.map((el: DisciplineEnrollment): number => el.diaryId)
-    );
+      await addUserToStudentRole(interaction);
 
-    addUserToProperChannels(interaction, channels);
-    addUserNickName(interaction, student);
-  } else {
-    await interaction.reply(`Falha na verificacão do token ${tokenOption}`);
+      const student = await studentService.getEnrolledStudentByEnrollmentId(
+        isValidToken.token?.enrollmentId
+      );
+
+      console.log(student);
+
+      const studentDisciplines =
+        await enrolledDisciplinesService.getStudentDisciplines(
+          student.enrollmentId
+        );
+      console.log(studentDisciplines);
+
+      const channels = await channelsService.getChannelsByDiaryIds(
+        studentDisciplines.map((el: DisciplineEnrollment): number => el.diaryId)
+      );
+      console.log(channels);
+
+      addUserToProperChannels(interaction, channels);
+      addUserNickName(interaction, student);
+    } else {
+      await interaction.reply(`Falha na verificacão do token ${tokenOption}`);
+    }
+  } catch (err) {
+    console.log(err);
   }
 };
 
