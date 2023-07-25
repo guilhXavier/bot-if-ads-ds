@@ -63,15 +63,10 @@ const addUserToProperChannels = async (
       (ch) => ch.id === channel.channelId
     );
 
-    (cachedChannel as TextChannel).permissionOverwrites.set([
-      {
-        id: member,
-        allow: [
-          PermissionsBitField.Flags.ViewChannel,
-          PermissionsBitField.Flags.SendMessages,
-        ],
-      },
-    ]);
+    (cachedChannel as TextChannel).permissionOverwrites.edit(member, {
+      ViewChannel: true,
+      SendMessages: true,
+    });
   });
 };
 

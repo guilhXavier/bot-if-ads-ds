@@ -39,10 +39,7 @@ const resetChannelsInteraction = async (
     (cachedChannel as TextChannel).permissionOverwrites.set([
       {
         id: interaction.guild.id,
-        deny: [
-          PermissionsBitField.Flags.ViewChannel,
-          PermissionsBitField.Flags.SendMessages,
-        ],
+        deny: [PermissionsBitField.Flags.ViewChannel],
       },
     ]);
   });
