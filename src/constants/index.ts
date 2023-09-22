@@ -1,1 +1,11 @@
 export const TOKEN_EXPIRY_MILLISECONDS = 3600000;
+export const ADS_GENERAL_CHANNELS = {
+  generalText: '1124401214340218960',
+  updates: '1124401280434044950',
+  generalVoice: '1124401280434044950',
+};
+export const TDS_GENERAL_CHANNELS = {
+  generalText: '1120850574242484354',
+  updates: '1120850656752828527',
+  generalVoice: '1120852897912074270',
+};

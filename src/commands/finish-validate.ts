@@ -24,6 +24,7 @@ import { DisciplineEnrollmentRepository } from '../repository/DisciplineEnrollme
 import { EnrolledStudentService } from '../services/enrolledStudent.service';
 import { EnrolledStudentRepository } from '../repository/EnrolledStudent.repository';
 import { studentNameFormatter } from '../formatters/studentName';
+import { ADS_GENERAL_CHANNELS, TDS_GENERAL_CHANNELS } from '../constants';
 
 const tokenService = new TokenService(new TokenRepository(prisma));
 
@@ -38,6 +39,53 @@ const enrolledDisciplinesService = new DisciplineEnrollmentService(
 const studentService = new EnrolledStudentService(
   new EnrolledStudentRepository(prisma)
 );
+
+const addToProperGeneralChannel = async (
+  interaction: ChatInputCommandInteraction,
+  student: EnrolledStudent
+): Promise<void> => {
+  const channelManager = interaction.guild.channels;
+  const member = interaction.member.user.id;
+  if (student.enrollmentId.includes('ADS')) {
+    const textChannel = channelManager.cache.find(
+      (channel) => channel.id === ADS_GENERAL_CHANNELS.generalText
+    );
+    const updatesChannel = channelManager.cache.find(
+      (channel) => channel.id === ADS_GENERAL_CHANNELS.updates
+    );
+
+    (textChannel as TextChannel).permissionOverwrites.edit(member, {
+      ViewChannel: true,
+      SendMessages: true,
+    });
+
+    (updatesChannel as TextChannel).permissionOverwrites.edit(member, {
+      ViewChannel: true,
+      SendMessages: true,
+    });
+
+    return;
+  }
+
+  const textChannel = channelManager.cache.find(
+    (channel) => channel.id === TDS_GENERAL_CHANNELS.generalText
+  );
+  const updatesChannel = channelManager.cache.find(
+    (channel) => channel.id === TDS_GENERAL_CHANNELS.updates
+  );
+
+  (textChannel as TextChannel).permissionOverwrites.edit(member, {
+    ViewChannel: true,
+    SendMessages: true,
+  });
+
+  (updatesChannel as TextChannel).permissionOverwrites.edit(member, {
+    ViewChannel: true,
+    SendMessages: true,
+  });
+
+  return;
+};
 
 const addUserToStudentRole = async (
   interaction: ChatInputCommandInteraction
@@ -55,8 +103,6 @@ const addUserToProperChannels = async (
 ): Promise<void> => {
   const channelManager = interaction.guild.channels;
   const member = interaction.member.user.id;
-
-  console.log(channels);
 
   channels.forEach(async (channel: DisciplineChannel): Promise<void> => {
     const cachedChannel = channelManager.cache.find(
@@ -106,7 +152,7 @@ const finishValidationCommandInteraction = async (
   try {
     if (isValidToken.isValid) {
       await interaction.reply(
-        `Token ${tokenOption} verificado com sucesso. Voce será adicionado aos seus canais respectivos.`
+        `Token verificado com sucesso. Voce será adicionado aos seus canais respectivos.`
       );
 
       await addUserToStudentRole(interaction);
@@ -115,26 +161,23 @@ const finishValidationCommandInteraction = async (
         isValidToken.token?.enrollmentId
       );
 
-      console.log(student);
-
       const studentDisciplines =
         await enrolledDisciplinesService.getStudentDisciplines(
           student.enrollmentId
         );
-      console.log(studentDisciplines);
 
       const channels = await channelsService.getChannelsByDiaryIds(
         studentDisciplines.map((el: DisciplineEnrollment): number => el.diaryId)
       );
-      console.log(channels);
 
       addUserToProperChannels(interaction, channels);
+      addToProperGeneralChannel(interaction, student);
       addUserNickName(interaction, student);
     } else {
-      await interaction.reply(`Falha na verificacão do token ${tokenOption}`);
+      await interaction.reply(`Falha na verificacão do token`);
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
